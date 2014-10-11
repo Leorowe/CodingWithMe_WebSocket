@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=1024, user-scalable=no">
 
-  <title>Your deck.js Presentation</title>
+  <title>CodingWithMe WebSocket</title>
 
   <!-- Required stylesheet -->
   <link rel="stylesheet" media="screen" href="css/deck.core.css">
@@ -18,10 +18,10 @@
   <link rel="stylesheet" media="screen" href="extensions/scale/deck.scale.css">
 
   <!-- Style theme. More available in /themes/style/ or create your own. -->
-  <link rel="stylesheet" media="screen" href="css/neon.css">
+  <link rel="stylesheet" media="screen" href="css/swiss.css">
 
   <!-- Transition theme. More available in /themes/transition/ or create your own. -->
-  <link rel="stylesheet" media="screen" href="css/horizontal-slide.css">
+  <link rel="stylesheet" media="screen" href="css/fade.css">
 
   <!-- Basic black and white print styles -->
   <link rel="stylesheet" media="print" href="css/print.css">
@@ -33,6 +33,12 @@
       bottom: 80px;
       position: absolute;
    }
+   #3pplist > ul{
+	list-style-type: none;
+   }
+   #3pplist img{
+	width: 508px;
+   }
   </style>
 </head>
 <body>
@@ -41,12 +47,12 @@
     <!-- Begin slides. Just make elements with a class of slide. -->
 
     <section class="slide">
-      <h1>WebSocket</h1>
+      <h1>When Node meet with WebSocket</h1>
       <h2>CodingWithMe</h2>
       <h5 id="authorName">XLD/D Wei Luo</h5>
     </section>
 
-    <section class="slide">
+	<section class="slide">
       <h2>What happened to HTML</h2>
       <ol>
         <li><h3>Protocol for Document transmit<h3></li>
@@ -74,24 +80,15 @@
         <li><h3>Front-End Notification(e.g. BMC Alarm)</h3></li>
       </ol>
     </section>
-
-    <section class="slide">
-      <h2>What WebSocket Bring to Us</h2>
-      <ol>
-        <li><h3>Use Http to upgrade protocol</h3></li>
-        <li><h3>Full-duplex Bidirectional</h3></li>
-        <li><h3>Sub-protocol above WebSocket</h3></li>
-        <li><h3>wss:// (over SSL)</h3></li>
-      </ol>
-    </section>
-
-    <section class="slide">
+	
+    <section class="slide" >
       <h2>Let's Coding</h2>
-      <ol>
-        <li><h3>install Node.js</h3></li>
-        <li><h3>install express framework</h3></li>
-        <li><h3>install Socket.io</h3></li>
-      </ol>
+      <ul style="list-style-type: none;">
+	    <li><img style="width: 508px;" src='img/codio.PNG'/></li>
+        <li><img style="width: 508px;"  src='img/node.PNG'/></li>
+        <li><img style="width: 508px;" src='img/express.PNG'/></li>
+        <li><img style="width: 508px;" src='img/socket.io.PNG'/></li>
+      </ul>
     </section>
 
     <section class="slide">
@@ -107,15 +104,6 @@
             }
         </code>
       </pre>
-    </section>
-
- <section class="slide" id="express introduction">
-      <h2>Express framework</h2>
-      <p> <a href="http://expressjs.com/">Express</a> is the de-facto standard for a light weight web framework in node.js</p>
-      <blockquote cite="http://expressjs.com/">
-        <p>Express is a minimal and flexible node.js web application framework, providing a robust set of features for building single and multi-page, and hybrid web applications.</p>
-        <p><cite><a  href="https://medium.com/@tjholowaychuk">TJ Holowaychuk</a></cite></p>
-      </blockquote>
     </section>
 
 
@@ -317,14 +305,18 @@
       <pre>
         <code>
         &lt;script src="/socket.io/socket.io.js"&gt;&lt;/script&gt;
+		<strong><em>
         &lt;script src="http://code.jquery.com/jquery-1.11.1.js"&gt;&lt;/script&gt;
+		</em></strong>
         &lt;script&gt;
           var socket = io();
+		  <strong><em>
           $('form').submit(function(){
             socket.emit('chat message', $('#m').val());
             $('#m').val('');
             return false;
           });
+		 </em></strong>
         &lt;/script&gt;
         </code>
       </pre>
@@ -338,9 +330,11 @@
       <pre>
         <code>
             io.on('connection', function(socket){
+			 <strong>
               socket.on('chat message', function(msg){
                 console.log('message: ' + msg);
               });
+			 </strong>
             });
         </code>
       </pre>
@@ -373,7 +367,7 @@
       <pre>
         <code>
             io.on('connection', function(socket){
-              socket.broadcast.emit('hi');
+              socket.broadcast.emit('chat message','hi');
             });
         </code>
         </pre>
@@ -385,9 +379,11 @@
       <pre>
         <code>
           io.on('connection', function(socket){
+		  <strong>
             socket.on('chat message', function(msg){
               io.emit('chat message', msg);
             });
+		  </strong>
           });
         </code>
       </pre>
@@ -406,9 +402,11 @@
               $('#m').val('');
               return false;
             });
+			<strong>
             socket.on('chat message', function(msg){
               $('#messages').append($('&lt;li&gt;').text(msg));
             });
+			</strong>
           &lt;/script&gt;
         </code>
       </pre>
@@ -420,6 +418,58 @@
       <iframe src="img/2.mp4" width="1900" height="525" frameborder="0"></iframe>
     </section>
 
+    <section class="slide">
+      <h2>Demo Time</h2>
+      <p>what happened when you restart your node server? </p>
+	  <ul>
+	   <li><strong>Ctrl+C</strong> to stop</li>
+	   <li><strong>node index.js</strong> to restart</li>
+	  </ul>
+	  
+    </section>
+	
+
+
+
+
+    <section class="slide">
+      <h2>User Cases</h2>
+      <ol>
+        <li>
+			<h3>Gaming</h3>
+			<p>With the success of Zynga and other social gaming companies, online gaming
+				has become a hot trend.WebSocket make building an in-browser become possible</p>
+		</li>
+        <li>
+          <h3>Social Stream Updates</h3>
+ 		  <p>Twitter is the best example of getting real-time data (the tweets) to the browser
+			without user action. Google+ and Facebook have it too. The important thing on
+			social networks is, being updated about happenings in real time.</p>
+        </li>
+        <li>
+        	<h3>Business applications</h3>
+        	<p>Salesforce, one of the most popular hosted CRM solutions, introduced Chatter.It allows the
+				customers to add comments or post updates on issues, which appear in real time to
+				the support associates on their system.</p>
+        </li>
+        <li>
+        	<h3>Web-based monitors</h3>
+        	<p>The latest updates to Google Analytics include a functionality to see the real-time
+				updates of users visiting your website.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="slide">
+      <h2>What WebSocket Bring to Us</h2>
+      <ol>
+        <li><h3>Use Http to upgrade protocol</h3></li>
+        <li><h3>Full-duplex Bidirectional</h3></li>
+        <li><h3>Sub-protocol above WebSocket</h3></li>
+        <li><h3>wss:// (over SSL)</h3></li>
+      </ol>
+    </section>
+	
     <section class="slide">
       <h2>Q&A</h2>
     </section>
