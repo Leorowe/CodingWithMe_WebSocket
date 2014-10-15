@@ -254,10 +254,16 @@
       <h2>Integrating Socket.IO</h2>
       <pre>
         <code>
+            &lt;body&gt;
+			....
+			....
+			<strong>
             &lt;script src="/socket.io/socket.io.js"&gt;&lt;/script&gt;
             &lt;script&gt;
               var socket = io();
             &lt;/script&gt;
+			</strong>
+            &lt;/body&gt;
         </code>
       </pre>
       <p>
@@ -340,6 +346,12 @@
       <pre>
         <code>
             io.on('connection', function(socket){
+			
+            console.log('a user connected');
+              socket.on('disconnect', function(){
+                console.log('user disconnected');
+              });
+			  
 			 <strong>
               socket.on('chat message', function(msg){
                 console.log('message: ' + msg);
@@ -349,12 +361,61 @@
         </code>
       </pre>
     </section>
-
+	
     <section class="slide">
       <h2>Demo Time</h2>
       <p>The result should be like the following video:</p>
       <iframe src="img/1.mp4" width="1900" height="525" frameborder="0"></iframe>
     </section>
+	
+    <section class="slide">
+      <h2>send Hello from Server to Client</h2>
+      <pre>
+        <code>
+          &lt;script&gt;
+            var socket = io();
+            $('form').submit(function(){
+              socket.emit('chat message', $('#m').val());
+              $('#m').val('');
+              return false;
+            });
+			<strong>
+            socket.on('chat message', function(msg){
+              $('#messages').append($('&lt;li&gt;').text(msg));
+            });
+			</strong>
+          &lt;/script&gt;
+        </code>
+      </pre>
+    </section>
+	
+    <section class="slide">
+      <h2>send Hello from Server to Client</h2>
+      <pre>
+        <code>
+          var app=require('express')();
+          var http = require('http').Server(app);
+          var io = require('socket.io')(http);
+		  <strong>
+          var repl = require("repl");
+          </strong>
+		  ...
+          http.listen(3000, function(){
+            console.log('listening on *:3000');
+          });
+          <strong>
+          var remoteMultiEval = function(cmd, context, filename, callback) {
+            io.emit('chat message',cmd);
+            callback(null, "(result pending)");
+          }
+          repl.start({"eval": remoteMultiEval});
+          </strong>
+        </code>
+      </pre>
+    </section>	
+	
+	
+
 
     <section class="slide">
       <h2>Broadcasting!</h2>
@@ -377,7 +438,7 @@
       <pre>
         <code>
             io.on('connection', function(socket){
-              socket.broadcast.emit('chat message','hi');
+              socket.broadcast.emit('chat message','new comer join');
             });
         </code>
         </pre>
@@ -400,27 +461,7 @@
     </section>
 
 
-    <section class="slide">
-      <h2></h2>
-      <p>And on the client side when we capture a <code>chat message</code> event we’ll include it in the page. The total client-side JavaScript code now amounts to:</p>
-      <pre>
-        <code>
-          &lt;script&gt;
-            var socket = io();
-            $('form').submit(function(){
-              socket.emit('chat message', $('#m').val());
-              $('#m').val('');
-              return false;
-            });
-			<strong>
-            socket.on('chat message', function(msg){
-              $('#messages').append($('&lt;li&gt;').text(msg));
-            });
-			</strong>
-          &lt;/script&gt;
-        </code>
-      </pre>
-    </section>
+
 
     <section class="slide">
       <h2>Demo Time</h2>
